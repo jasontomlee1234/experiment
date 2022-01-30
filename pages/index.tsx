@@ -125,7 +125,7 @@ function Home() {
 
     const data = {
       username: cashOutName,
-      amount: available.available,
+      amount: available.amount,
     };
     const res = await fetch(`/api/sign`, {
       method: "POST",
@@ -137,8 +137,18 @@ function Home() {
     const { v, r, s } = await res.json();
     console.log({ v, r, s });
     coin
-      .cashOut(parseEther(available.available), cashOutName, v, r, s)
+      .cashOut(parseEther(available.amount), cashOutName, v, r, s)
       .then((tx) => {
+        fetch(`/api/debit?cashOutName=${cashOutName}`, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json"
+          },
+          body: JSON.stringify({
+            cashOutName,
+            amount: available.amount
+          }),
+        });
         return tx.wait();
       })
       .then((re) => {
