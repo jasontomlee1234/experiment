@@ -12,7 +12,6 @@ import MinecraftNFT_ABI from "../contracts/MinecraftNFT.json";
 import { Contract } from "@ethersproject/contracts";
 import { useEffect, useState } from "react";
 import useMinecraftNFTContract from "../hooks/useMinecraftNFTContract";
-import useUsersTokens from "../hooks/useUsersTokens";
 import useEtherSWR, { EthSWRConfig } from "ether-swr";
 import useSWR from "swr";
 import useCoinContract from "../hooks/useCoinContract";
