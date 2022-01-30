@@ -114,30 +114,19 @@ function Home() {
   }
 
   async function cashOut() {
-    console.log(process.env.HOST);
-    const response = await fetch(`${process.env.HOST}/v1/server/exec`, {
-      method: "POST",
+    console.log(cashOutName);
+    const response = await fetch(`/api/balance?cashOutName=${cashOutName}`, {
+      method: "GET",
       headers: {
-        "Content-Type": "application/x-www-form-urlencoded",
-        key: process.env.SERVER_KEY,
+        "Content-Type": "application/json"
       },
-      body: new URLSearchParams({
-        command: `balance ${cashOutName}`,
-        time: 3,
-      } as any),
     });
-    const text = await response.text();
-    const available = text.split("$")[1];
-    if (!available) {
-      console.error("user not found");
-      return;
-    }
+    const available = await response.json();
 
     const data = {
       username: cashOutName,
-      amount: available,
+      amount: available.available,
     };
-    console.log(data);
     const res = await fetch(`/api/sign`, {
       method: "POST",
       headers: {
@@ -148,7 +137,7 @@ function Home() {
     const { v, r, s } = await res.json();
     console.log({ v, r, s });
     coin
-      .cashOut(parseEther(available), cashOutName, v, r, s)
+      .cashOut(parseEther(available.available), cashOutName, v, r, s)
       .then((tx) => {
         return tx.wait();
       })

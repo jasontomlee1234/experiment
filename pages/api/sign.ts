@@ -3,19 +3,12 @@
 import { NextApiRequest, NextApiResponse } from "next";
 import { Wallet } from "@ethersproject/wallet";
 import { splitSignature, arrayify } from "@ethersproject/bytes";
-import { AbiCoder } from "@ethersproject/abi"
-import { keccak256 } from "@ethersproject/keccak256"
 const { ethers } = require("ethers");
 import {
-  formatUnits,
-  parseUnits,
-  formatEther,
   parseEther,
-  commify,
 } from "@ethersproject/units";
 
 export default async (req: NextApiRequest, res: NextApiResponse) => {
-  const abiCoder = new AbiCoder()
   console.log(req.body)
   if (req.method === "POST") {
     const signer = new Wallet(process.env.PRIVATE_KEY)
